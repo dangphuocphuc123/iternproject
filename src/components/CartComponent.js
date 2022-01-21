@@ -1,114 +1,111 @@
-import React from 'react'
+import React from "react";
+import {
+  GetAllProduct,
+  GetNumberCart,
+  DecreaseQuantity,
+  IncreaseQuantity,
+  DeleteCart,
+  AddCart,
+  UpdateCart,
+} from "../actions";
+import { connect } from "react-redux";
 
- function CartComponent({items, renderArray, setRenderArray}) {
-    console.log(items);
-    console.log(renderArray);
-    console.log(setRenderArray);
-    if (true) return (
-        <div>123</div>
-    )
-   
-    return (
-
-        <table class="table table-borderless table-shopping-cart">
-        <thead class="text-muted">
-        <tr class="small text-uppercase">
-        <th scope="col">Product</th>
-        <th scope="col" width="120">Quantity</th>
-        <th scope="col" width="120">Price</th>
-        <th scope="col" class="text-right" width="200"> </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                <figure class="itemside">
-                    <div class="aside"><img src="assets/images/items/1.jpg" class="img-sm" /></div>
-                    <figcaption class="info">
-                        <a href="#" class="title text-dark">Some name of item goes here nice</a>
-                        <p class="text-muted small">Size: XL, Color: blue, <br /> Brand: Gucci</p>
-                    </figcaption>
-                </figure>
-            </td>
-            <td> 
-                <select class="form-control">
-                    <option>1</option>
-                    <option>2</option>  
-                    <option>3</option>  
-                    <option>4</option>  
-                </select> 
-            </td>
-            <td> 
-                <div class="price-wrap"> 
-                    <var class="price">$1156.00</var> 
-                    <small class="text-muted"> $315.20 each </small> 
-                </div> 
-            </td>
-            <td class="text-right"> 
-            <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light mr-2" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
-            <a href="" class="btn btn-light"> Remove</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <figure class="itemside">
-                    <div class="aside"><img src="assets/images/items/2.jpg" class="img-sm" /></div>
-                    <figcaption class="info">
-                        <a href="#" class="title text-dark">Product name  goes here nice</a>
-                        <p class="text-muted small">Size: XL, Color: blue, <br /> Brand: Gucci</p>
-                    </figcaption>
-                </figure>
-            </td>
-            <td> 
-                <select class="form-control">
-                    <option>1</option>
-                    <option>2</option>  
-                    <option>3</option>  
-                    <option>4</option>  
-                </select> 
-            </td>
-            <td> 
-                <div class="price-wrap"> 
-                    <var class="price">$149.97</var> 
-                    <small  class="text-muted"> $75.00 each </small>  
-                </div> 
-            </td>
-            <td class="text-right"> 
-            <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light mr-2" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
-            <a href="" class="btn btn-light btn-round"> Remove</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <figure class="itemside">
-                    <div class="aside"><img src="assets/images/items/3.jpg" class="img-sm" /></div>
-                    <figcaption class="info">
-                        <a href="#" class="title text-dark">Another name of some product goes just here</a>
-                        <p class="small text-muted">Size: XL, Color: blue,  Brand: Tissot</p>
-                    </figcaption>
-                </figure>
-            </td>
-            <td> 
-                <select class="form-control">
-                    <option>1</option>
-                    <option>2</option>  
-                    <option>3</option>  
-                </select> 
-            </td>
-            <td> 
-                <div class="price-wrap"> 
-                    <var class="price">$98.00</var> 
-                    <small class="text-muted"> $578.00 each</small> 
-                </div> 
-            </td>
-            <td class="text-right"> 
-                <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light mr-2" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
-                <a href="" class="btn btn-light btn-round"> Remove</a>
-            </td>
-        </tr>
-        </tbody>
+function CartComponent({
+  items,
+  IncreaseQuantity,
+  DecreaseQuantity,
+  DeleteCart,
+}) {
+  let ListCart = [];
+  let TotalCart = 0;
+  Object.keys(items.Carts).forEach(function (item) {
+    TotalCart += items.Carts[item].quantity * items.Carts[item].price;
+    ListCart.push(items.Carts[item]);
+  });
+  function TotalPrice(price, tonggia) {
+    return Number(price * tonggia).toLocaleString("en-US");
+  }
+  return (
+    <div className="row">
+      <div className="col-md-12">
+        <table className="table" style={{ width: "100%", float: "left" }}>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Image</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody style={{ width: "100%" }}>
+            {ListCart.map((item, key) => {
+              return (
+                <tr key={key}>
+                  <th>
+                    <button
+                      className="badge badge-danger"
+                      onClick={() => DeleteCart(key)}
+                    >
+                      X
+                    </button>
+                  </th>
+                  <th>{item.name}</th>
+                  <th>
+                    <img
+                      src={item.image}
+                      style={{ width: "100px", height: "80px" }}
+                    />
+                  </th>
+                  <th>{item.price} $</th>
+                  <th>
+                    <button
+                      className="btn btn-primary"
+                      style={{ margin: "5px" }}
+                      onClick={() => DecreaseQuantity(key)}
+                    >
+                      -
+                    </button>
+                    <span className="btn btn-info">{item.quantity}</span>
+                    <button
+                      className="btn btn-primary"
+                      style={{ margin: "5px" }}
+                      onClick={() => IncreaseQuantity(key)}
+                    >
+                      +
+                    </button>
+                  </th>
+                  <th>{TotalPrice(item.price, item.quantity)} $</th>
+                </tr>
+              );
+            })}
+            <tr style={{ background: "red" }}>
+              <th colSpan="5">Total Carts</th>
+              <th>{Number(TotalCart).toLocaleString("en-US")} $</th>
+            </tr>
+            <tr>
+              <th colSpan="5"></th>
+              <th>
+                <button style={{ width: "100px", background: 'pink' }}>
+                  <h3>Pay</h3>
+                </button>
+              </th>
+            </tr>
+          </tbody>
         </table>
-    );
+      </div>
+    </div>
+  );
 }
-
-export default CartComponent;
+const mapStateToProps = (state) => {
+  //  console.log(state)
+  return {
+    items: state._todoProduct,
+  };
+};
+export default connect(mapStateToProps, {
+  IncreaseQuantity,
+  DecreaseQuantity,
+  DeleteCart,
+})(CartComponent);

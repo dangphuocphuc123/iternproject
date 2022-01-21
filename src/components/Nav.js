@@ -15,36 +15,36 @@ import StyledInputBase from "@mui/icons-material/Style";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { createSvgIcon } from "@mui/material/utils";
 import Avatar from "@mui/material/Avatar";
 import { useDispatch, useSelector } from "react-redux";
+import { connect } from "react-redux";
+import LogoutIcon from '@mui/icons-material/Logout';
+import {removeUserSession} from "../utils/Common";
 
-
-function Nav() {
+function Nav(props) {
   const styleh4 = {
     color: "black",
-    padding: "10px 10px 10px 10px",
+    padding: "20px 20px 20px 20px",
     margin: "auto",
     display: "block-inline",
     textDecoration: "none",
   };
-  
+  console.log(props.numberCart);
   const [images, setImages] = useState({});
   const [item, setItem] = useState({ name: "", icon: " " });
   const [items, setItems] = useState([]);
-  
+
   useEffect(() => {
     fetchItems();
   }, []);
   const fetchItems = async () => {
-    const data1 = await fetch(
-      `https://localhost:44380/api/Products`
-    )
-    .then((res)=> res.json())
-    .then((json)=>{
-      setItems(json)
-    });
+    const data1 = await fetch(`https://localhost:44380/api/Products`)
+      .then((res) => res.json())
+      .then((json) => {
+        setItems(json);
+      });
   };
 
   const top100Films = items.map((item) => ({
@@ -77,8 +77,14 @@ function Nav() {
       width: "auto",
     },
   }));
+  console.log(localStorage.getItem("token"));
+  const showUser = localStorage.getItem("user");
+  const showUser1 = JSON.parse(showUser);
+  const Logout = ()=>{
+    removeUserSession();
+  }
   return (
-    <nav style={{ padding: "10px 10px 10px 10px" }}>
+    <nav style={{ padding: "20px 20px 20px 20px" }}>
       <Link to="/">
         <button>
           <img
@@ -143,7 +149,10 @@ function Nav() {
         )}
       />
       );
-      <ul className="nav-links">
+      <ul
+        className="nav-links"
+        style={{ textDecoration: "none", display: "block-inline" }}
+      >
         <Link to="/"></Link>
         <Link to="/">
           <HomeIcon fontSize="large" color="primary" />
@@ -166,16 +175,29 @@ function Nav() {
         <Link to="/cart">
           <IconButton color="primary" aria-label="add to shopping cart">
             <AddShoppingCartIcon fontSize="large" />
+            <h6>({props.numberCart})</h6>
           </IconButton>
         </Link>
-        <Link to="/signin">
-        <IconButton color="primary" aria-label="add to shopping cart">
-          <Avatar alt="Loading" src="" option="abc" />
-        </IconButton>
-      </Link>
+        <Link
+          to="/signin"
+          style={{ display: "block-inline", textDecoration: "none" }}
+        >
+          <IconButton color="primary" aria-label="add to shopping cart" onClick={Logout}>
+            {localStorage.getItem("token") !== null ? (
+
+                <Avatar alt="Loading" src={showUser1.avatar} option="abc" />
+            ) : (
+              <Avatar alt="Loading" src="" option="abc" />
+            )}
+          </IconButton>
+        </Link>
       </ul>
     </nav>
   );
 }
-
-export default Nav;
+const mapStateToProps = (state) => {
+  return {
+    numberCart: state._todoProduct.numberCart,
+  };
+};
+export default connect(mapStateToProps, null)(Nav);

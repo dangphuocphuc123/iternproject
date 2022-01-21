@@ -19,10 +19,10 @@ const styleh4 = {
 };
 
 const img = {
-  border: "5px solid #ddd",
+  // border: "5px solid #ddd",
   padding: "20px 20px 15px 15px",
-  width: "200px",
-  height: "200px",
+  width: "500px",
+  height: "300px",
 };
 const stylediv = {
   float: "left",
@@ -59,15 +59,17 @@ function Shop() {
           <div style={{ width: "100%" }}>
             {renderItems.map((item, index) => (
               <div style={stylediv}>
+                <Link style={styleh4} to={`/${item?.productId}`}>
                 <img
                   src={item?.thumb}
                   alt="Loading"
                   style={img}
-                ></img>
+                >
+                </img>
+                </Link>
                 <h4 key={item?.productId} style={styleh4}>
-                  <Link style={styleh4} to={`/${item?.productId}`}>
-                    {item?.productName}
-                  </Link>
+                  
+                  {item?.productName}
                 </h4>
                 <h5>Price: {item?.price}</h5>
               </div>

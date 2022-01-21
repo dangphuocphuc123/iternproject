@@ -5,8 +5,12 @@ import Cart from "./Cart";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
+import { CardActions } from "@mui/material";
+import ShopApp from "../reducers";
+import {AddCart} from "../actions/index";
+import {connect} from 'react-redux';
 
-function ItemDetail() {
+function ItemDetail(props) {
   const pathname = window.location.pathname;
   const id = pathname.split("/", pathname.length);
   useEffect(() => {
@@ -24,7 +28,9 @@ function ItemDetail() {
       });
   };
   
-  const addCart = () => {};
+  const addCart = () => {
+    props.AddCart(item);
+  };
   console.log(item);
   return (
     <div>
@@ -34,9 +40,9 @@ function ItemDetail() {
           src={item.thumb}
           alt="Loading"
           style={{
-            width: "600px",
-            height: "700px",
-            padding: "20px 20px 20px 20px",
+            width: "900px",
+            height: "600px",
+            padding: "0px 20px 20px 20px",
           }}
         ></img>
       </div>
@@ -45,7 +51,7 @@ function ItemDetail() {
         style={{
           width: "30%",
           float: "left",
-          padding: "100px 300px 450px 450px",
+          padding: "100px 300px 500px 630px",
         }}
       >
         <h1>Name: {item.productName}</h1>
@@ -61,5 +67,15 @@ function ItemDetail() {
     </div>
   );
 }
-
-export default ItemDetail;
+const mapStateToProps = state =>{
+  return {
+       _products: state._todoProduct,
+     };
+}
+function mapDispatchToProps(dispatch){
+  return{
+      AddCart:item=>dispatch(AddCart(item))
+   
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(ItemDetail)

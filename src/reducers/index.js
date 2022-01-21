@@ -21,7 +21,7 @@ function todoProduct(state = initProduct,action){
         case ADD_CART:
             if(state.numberCart==0){
                 let cart = {
-                    id:action.payload.producId,
+                    id:action.payload.productId,
                     quantity:1,
                     name:action.payload.productName,
                     image:action.payload.thumb,
@@ -32,14 +32,14 @@ function todoProduct(state = initProduct,action){
             else{
                 let check = false;
                 state.Carts.map((item,key)=>{
-                    if(item.producId==action.payload.producId){
+                    if(item.id==action.payload.productId){
                         state.Carts[key].quantity++;
                         check=true;
                     }
                 });
                 if(!check){
                     let _cart = {
-                        id:action.payload.producId,
+                        id:action.payload.productId,
                         quantity:1,
                         name:action.payload.productName,
                         image:action.payload.thumb,
@@ -65,7 +65,6 @@ function todoProduct(state = initProduct,action){
                     state.numberCart--;
                     state.Carts[action.payload].quantity--;
                 }
-              
                 return{
                     ...state
                 }
@@ -75,7 +74,7 @@ function todoProduct(state = initProduct,action){
                     ...state,
                     numberCart:state.numberCart - quantity_,
                     Carts:state.Carts.filter(item=>{
-                        return item.productId!=state.Carts[action.payload].productId
+                        return item.id!=state.Carts[action.payload].id
                     })
                    
                 }
@@ -83,7 +82,9 @@ function todoProduct(state = initProduct,action){
             return state;
     }
 }
+
 const ShopApp = combineReducers({
     _todoProduct:todoProduct
 });
+
 export default ShopApp;
